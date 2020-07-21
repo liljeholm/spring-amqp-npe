@@ -27,7 +27,7 @@ class DemoApplicationTests {
     private RabbitListenerTestHarness harness;
 
     @Test
-    void contextLoads() {
+    void contextLoads() throws InterruptedException {
         DemoListener demoListener = harness.getSpy("demoListener");
         assertNotNull(demoListener, "Should not be null");
 
@@ -36,6 +36,7 @@ class DemoApplicationTests {
 
         rabbitTemplate.convertAndSend("myQueue", "Hello!");
 
+        answer.getLatch().await();
         assertThat(answer.getExceptions()).isEmpty();
     }
 }
